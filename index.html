@@ -21,13 +21,37 @@
             border: none;
             border-radius: 5px;
         }
+        .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: #7b2cbf;
+  padding: 10px 0;
+}
+.nav-item {
+  color: white;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+        
     </style>
 </head>
 <body>
     <h1>Welcome to Quick Task Earning</h1>
     <p>Complete tasks to earn points!</p>
     <button id="taskBtn">Complete Task</button>
-
+<div class="bottom-nav">
+  <button class="nav-item">Home</button>
+  <button class="nav-item">Support</button>
+  <button class="nav-item">Tasks</button>
+  <button class="nav-item">Wallet</button>
+</div>
+    
     <script>
         document.getElementById('taskBtn').addEventListener('click', function() {
             alert('Task completed! Points will be added to your account.');
