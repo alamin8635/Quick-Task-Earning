@@ -164,6 +164,18 @@
             color: #38bdf8;
             background: rgba(56, 189, 248, 0.1);
         }
+
+        .refer-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px dashed #38bdf8;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            word-break: break-all;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #38bdf8;
+        }
     </style>
 </head>
 <body>
@@ -182,7 +194,7 @@
                 <div class="task-title">সরাসরি কাজ করুন</div>
                 <div class="task-reward">প্রতিদিন আয় করুন</div>
             </div>
-            <button class="btn-task" onclick="showSection('tasks-section', this)">কাজ শুরু করুন</button>
+            <button class="btn-task" onclick="showSection('tasks-section', document.querySelectorAll('.nav-item')[1])">কাজ শুরু করুন</button>
         </div>
     </div>
 
@@ -192,22 +204,43 @@
         
         <div class="task-card">
             <div>
-                <div class="task-title">Monetag Ad</div>
-                <div class="task-reward">পুরস্কার: ৫ টাকা</div>
+                <div class="task-title">Ad Task 1 (Monetag)</div>
+                <div class="task-reward">পুরস্কার: ৳০.৪০ (৪০ পয়সা)</div>
             </div>
-            <button class="btn-task" onclick="completeTask(this, 'https://example.com', 5)">কাজ করুন</button>
+            <button class="btn-task" onclick="completeTask(this, 'https://omg10.com/4/11272679', 0.40)">কাজ করুন</button>
         </div>
 
         <div class="task-card">
             <div>
-                <div class="task-title">Adsterra Ad</div>
-                <div class="task-reward">পুরস্কার: ১০ টাকা</div>
+                <div class="task-title">Ad Task 2 (Adsterra)</div>
+                <div class="task-reward">পুরস্কার: ৳০.৩০ (৩০ পয়সা)</div>
             </div>
-            <button class="btn-task" onclick="completeTask(this, 'https://example.com', 10)">কাজ করুন</button>
+            <button class="btn-task" onclick="completeTask(this, 'https://www.profitableratecpmnetwork.com/zppgyhefhv?key=0c986208fb6fc82ccd76ef820b790a51', 0.30)">কাজ করুন</button>
+        </div>
+
+        <div class="task-card">
+            <div>
+                <div class="task-title">Ad Task 3 (Adwatica)</div>
+                <div class="task-reward">পুরস্কার: ৳০.৬০ (৬০ পয়সা)</div>
+            </div>
+            <button class="btn-task" onclick="completeTask(this, 'https://data527.click/6a53d7f3ec7d883df750/db507812a2/?placementName=default', 0.60)">কাজ করুন</button>
         </div>
     </div>
 
-    <!-- 3. Support Section -->
+    <!-- 3. Refer Section -->
+    <div id="refer-section" class="page-section">
+        <div class="section-title">রেফার করে আয় করুন</div>
+        <div class="task-card" style="display: block;">
+            <div class="task-title" style="margin-bottom: 8px;">প্রতি রেফারে পাবেন ৳৩.৫০ টাকা!</div>
+            <div class="task-reward" style="margin-bottom: 12px; color: #cbd5e1;">আপনার বন্ধুদের নিচের রেফার লিংক দিয়ে জয়েন করান:</div>
+            
+            <div class="refer-box" id="referLinkText">লোড হচ্ছে...</div>
+            
+            <button class="btn-submit" onclick="copyReferLink()">লিংক কপি করুন</button>
+        </div>
+    </div>
+
+    <!-- 4. Support Section -->
     <div id="support-section" class="page-section">
         <div class="section-title">হেল্প ও সাপোর্ট</div>
         <div class="task-card">
@@ -217,7 +250,7 @@
         </div>
     </div>
 
-    <!-- 4. Withdraw Section -->
+    <!-- 5. Withdraw Section -->
     <div id="withdraw-section" class="page-section">
         <div class="section-title">টাকা উত্তোলন (Withdraw)</div>
         <div class="task-card" style="display: block;">
@@ -244,14 +277,45 @@
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showSection('home-section', this)">হোম</button>
         <button class="nav-item" onclick="showSection('tasks-section', this)">টাস্ক</button>
+        <button class="nav-item" onclick="showSection('refer-section', this)">রেফার</button>
         <button class="nav-item" onclick="showSection('support-section', this)">সাপোর্ট</button>
         <button class="nav-item" onclick="showSection('withdraw-section', this)">উইথড্র</button>
     </div>
 
     <script>
         let currentBalance = 0.00;
+        let userId = localStorage.getItem('user_id');
 
-        // Section Switcher
+        if (!userId) {
+            userId = 'user_' + Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem('user_id', userId);
+        }
+
+        const referBonus = 3.50;
+        const currentUrl = window.location.href.split('?')[0];
+        const userReferLink = `${currentUrl}?ref=${userId}`;
+        document.getElementById('referLinkText').innerText = userReferLink;
+
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref');
+            
+            if (refParam && refParam !== userId && !localStorage.getItem('referred_by')) {
+                localStorage.setItem('referred_by', refParam);
+                currentBalance += referBonus;
+                document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+                alert(`আপনি রেফারেল লিংকের মাধ্যমে যুক্ত হয়েছেন এবং ৳${referBonus} বোনাস পেয়েছেন!`);
+            }
+        });
+
+        function copyReferLink() {
+            navigator.clipboard.writeText(userReferLink).then(() => {
+                alert('রেফার লিংক কপি হয়েছে!');
+            }).catch(() => {
+                alert('লিংক কপি করা সম্ভব হয়নি। ম্যানুয়ালি কপি করুন।');
+            });
+        }
+
         function showSection(sectionId, btnElement) {
             document.querySelectorAll('.page-section').forEach(section => {
                 section.classList.remove('active');
@@ -261,12 +325,20 @@
             });
 
             document.getElementById(sectionId).classList.add('active');
-            btnElement.classList.add('active');
+            if (btnElement) {
+                btnElement.classList.add('active');
+            }
         }
 
-        // Ad Task Validation with Timer (Ad verification)
+        // Strict Ad Verification Logic
         function completeTask(btn, adUrl, rewardAmount) {
-            window.open(adUrl, '_blank');
+            let adOpened = window.open(adUrl, '_blank');
+            
+            if (!adOpened || adOpened.closed || typeof adOpened.closed=='undefined') {
+                alert('অ্যাড ওপেন করা সম্ভব হয়নি! অনুগ্রহ করে ব্রাউজারের পপ-আপ এলাউ করুন।');
+                return;
+            }
+
             btn.disabled = true;
             let originalText = btn.innerText;
             let timeLeft = 10;
@@ -281,12 +353,11 @@
                     document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
                     btn.disabled = false;
                     btn.innerText = originalText;
-                    alert(`অভিনন্দন! আপনি ${rewardAmount} টাকা পেয়েছেন।`);
+                    alert(`অভিনন্দন! আপনি ৳${rewardAmount.toFixed(2)} টাকা পেয়েছেন।`);
                 }
             }, 1000);
         }
 
-        // Withdrawal Handling &amp; Validation
         function handleWithdraw() {
             let method = document.getElementById('withdrawMethod').value;
             let account = document.getElementById('withdrawAccount').value.trim();
@@ -312,7 +383,7 @@
             document.getElementById('withdrawAmount').value = '';
             document.getElementById('withdrawAccount').value = '';
 
-            alert(`আপনার ${amount} টাকা ${method} এ উত্তোলনের রিকোয়েস্ট সফল হয়েছে।`);
+            alert(`আপনার ৳${amount} টাকা ${method} এ উত্তোলনের রিকোয়েস্ট সফল হয়েছে।`);
         }
     </script>
 </body>
