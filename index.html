@@ -186,19 +186,30 @@
         <div class="balance-amount"><span id="userBalance">0.00</span> টাকা</div>
     </div>
 
-    <!-- 1. Home Section -->
+    <!-- 1. Home Section (Includes Referral System) -->
     <div id="home-section" class="page-section active">
         <div class="section-title">Quick Task Earning এ আপনাকে স্বাগতম</div>
+        
         <div class="task-card">
             <div>
                 <div class="task-title">সরাসরি কাজ করুন</div>
-                <div class="task-reward">প্রতিদিন আয় করুন</div>
+                <div class="task-reward">প্রতিদিন টাকা আয় করুন</div>
             </div>
             <button class="btn-task" onclick="showSection('tasks-section', document.querySelectorAll('.nav-item')[1])">কাজ শুরু করুন</button>
         </div>
+
+        <!-- Home Page Refer Card -->
+        <div class="task-card" style="display: block; margin-top: 20px;">
+            <div class="task-title" style="margin-bottom: 6px;">রেফার করে আয় করুন</div>
+            <div class="task-reward" style="margin-bottom: 12px; color: #cbd5e1;">প্রতি রেফারে পাবেন ৳৩.৫০ টাকা! বন্ধুদের শেয়ার করুন:</div>
+            
+            <div class="refer-box" id="referLinkText">লোড হচ্ছে...</div>
+            
+            <button class="btn-submit" onclick="copyReferLink()">লিংক কপি করুন</button>
+        </div>
     </div>
 
-    <!-- 2. Tasks Section -->
+    <!-- 2. Tasks Section (Contains Your 3 Direct Links) -->
     <div id="tasks-section" class="page-section">
         <div class="section-title">দৈনিক টাস্কসমূহ</div>
         
@@ -227,20 +238,7 @@
         </div>
     </div>
 
-    <!-- 3. Refer Section -->
-    <div id="refer-section" class="page-section">
-        <div class="section-title">রেফার করে আয় করুন</div>
-        <div class="task-card" style="display: block;">
-            <div class="task-title" style="margin-bottom: 8px;">প্রতি রেফারে পাবেন ৳৩.৫০ টাকা!</div>
-            <div class="task-reward" style="margin-bottom: 12px; color: #cbd5e1;">আপনার বন্ধুদের নিচের রেফার লিংক দিয়ে জয়েন করান:</div>
-            
-            <div class="refer-box" id="referLinkText">লোড হচ্ছে...</div>
-            
-            <button class="btn-submit" onclick="copyReferLink()">লিংক কপি করুন</button>
-        </div>
-    </div>
-
-    <!-- 4. Support Section -->
+    <!-- 3. Support Section -->
     <div id="support-section" class="page-section">
         <div class="section-title">হেল্প ও সাপোর্ট</div>
         <div class="task-card">
@@ -250,7 +248,7 @@
         </div>
     </div>
 
-    <!-- 5. Withdraw Section -->
+    <!-- 4. Withdraw Section -->
     <div id="withdraw-section" class="page-section">
         <div class="section-title">টাকা উত্তোলন (Withdraw)</div>
         <div class="task-card" style="display: block;">
@@ -273,11 +271,10 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (4 Options) -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showSection('home-section', this)">হোম</button>
         <button class="nav-item" onclick="showSection('tasks-section', this)">টাস্ক</button>
-        <button class="nav-item" onclick="showSection('refer-section', this)">রেফার</button>
         <button class="nav-item" onclick="showSection('support-section', this)">সাপোর্ট</button>
         <button class="nav-item" onclick="showSection('withdraw-section', this)">উইথড্র</button>
     </div>
@@ -330,12 +327,12 @@
             }
         }
 
-        // Strict Ad Verification Logic
+        // Direct Ad Trigger and Verification
         function completeTask(btn, adUrl, rewardAmount) {
             let adOpened = window.open(adUrl, '_blank');
             
-            if (!adOpened || adOpened.closed || typeof adOpened.closed=='undefined') {
-                alert('অ্যাড ওপেন করা সম্ভব হয়নি! অনুগ্রহ করে ব্রাউজারের পপ-আপ এলাউ করুন।');
+            if (!adOpened || adOpened.closed || typeof adOpened.closed == 'undefined') {
+                alert('অ্যাড ওপেন হয়নি! অনুগ্রহ করে আপনার ব্রাউজারের "Pop-ups and redirects" এলাউ (Allow) করুন।');
                 return;
             }
 
