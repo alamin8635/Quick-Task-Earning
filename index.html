@@ -186,7 +186,7 @@
         <div class="balance-amount"><span id="userBalance">0.00</span> টাকা</div>
     </div>
 
-    <!-- 1. Home Section (Includes Referral System) -->
+    <!-- 1. Home Section -->
     <div id="home-section" class="page-section active">
         <div class="section-title">Quick Task Earning এ আপনাকে স্বাগতম</div>
         
@@ -198,7 +198,6 @@
             <button class="btn-task" onclick="showSection('tasks-section', document.querySelectorAll('.nav-item')[1])">কাজ শুরু করুন</button>
         </div>
 
-        <!-- Home Page Refer Card -->
         <div class="task-card" style="display: block; margin-top: 20px;">
             <div class="task-title" style="margin-bottom: 6px;">রেফার করে আয় করুন</div>
             <div class="task-reward" style="margin-bottom: 12px; color: #cbd5e1;">প্রতি রেফারে পাবেন ৳৩.৫০ টাকা! বন্ধুদের শেয়ার করুন:</div>
@@ -209,7 +208,7 @@
         </div>
     </div>
 
-    <!-- 2. Tasks Section (Contains Your 3 Direct Links) -->
+    <!-- 2. Tasks Section -->
     <div id="tasks-section" class="page-section">
         <div class="section-title">দৈনিক টাস্কসমূহ</div>
         
@@ -238,17 +237,7 @@
         </div>
     </div>
 
-    <!-- 3. Support Section -->
-    <div id="support-section" class="page-section">
-        <div class="section-title">হেল্প ও সাপোর্ট</div>
-        <div class="task-card">
-            <div>
-                <div class="task-title">যেকোনো সমস্যার জন্য আমাদের টেলিগ্রাম এ যোগাযোগ করুন।</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. Withdraw Section -->
+    <!-- 3. Withdraw Section -->
     <div id="withdraw-section" class="page-section">
         <div class="section-title">টাকা উত্তোলন (Withdraw)</div>
         <div class="task-card" style="display: block;">
@@ -271,22 +260,32 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar (4 Options) -->
+    <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="showSection('home-section', this)">হোম</button>
         <button class="nav-item" onclick="showSection('tasks-section', this)">টাস্ক</button>
-        <button class="nav-item" onclick="showSection('support-section', this)">সাপোর্ট</button>
+        <button class="nav-item" onclick="openTelegramSupport()">সাপোর্ট</button>
         <button class="nav-item" onclick="showSection('withdraw-section', this)">উইথড্র</button>
     </div>
 
     <script>
-        let currentBalance = 0.00;
+        let savedBalance = localStorage.getItem('user_app_balance');
+        let currentBalance = savedBalance ? parseFloat(savedBalance) : 0.00;
+
         let userId = localStorage.getItem('user_id');
 
         if (!userId) {
             userId = 'user_' + Math.floor(100000 + Math.random() * 900000);
             localStorage.setItem('user_id', userId);
         }
+
+        function updateBalance(newBalance) {
+            currentBalance = newBalance;
+            localStorage.setItem('user_app_balance', currentBalance.toFixed(2));
+            document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+        }
+
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
 
         const referBonus = 3.50;
         const currentUrl = window.location.href.split('?')[0];
@@ -299,8 +298,7 @@
             
             if (refParam && refParam !== userId && !localStorage.getItem('referred_by')) {
                 localStorage.setItem('referred_by', refParam);
-                currentBalance += referBonus;
-                document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+                updateBalance(currentBalance + referBonus);
                 alert(`আপনি রেফারেল লিংকের মাধ্যমে যুক্ত হয়েছেন এবং ৳${referBonus} বোনাস পেয়েছেন!`);
             }
         });
@@ -327,7 +325,11 @@
             }
         }
 
-        // Direct Ad Trigger and Verification
+        // Open Telegram Channel directly
+        function openTelegramSupport() {
+            window.open('https://t.me/adincam', '_blank');
+        }
+
         function completeTask(btn, adUrl, rewardAmount) {
             let adOpened = window.open(adUrl, '_blank');
             
@@ -346,8 +348,7 @@
 
                 if (timeLeft < 0) {
                     clearInterval(timer);
-                    currentBalance += rewardAmount;
-                    document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+                    updateBalance(currentBalance + rewardAmount);
                     btn.disabled = false;
                     btn.innerText = originalText;
                     alert(`অভিনন্দন! আপনি ৳${rewardAmount.toFixed(2)} টাকা পেয়েছেন।`);
@@ -375,8 +376,8 @@
                 return;
             }
 
-            currentBalance -= amount;
-            document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+            updateBalance(currentBalance - amount);
+            
             document.getElementById('withdrawAmount').value = '';
             document.getElementById('withdrawAccount').value = '';
 
